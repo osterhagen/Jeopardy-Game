@@ -86,6 +86,7 @@ app.get('/questions', function(req, res) {
           entries[i][j].QuestionText = encodeURIComponent(entries[i][j].QuestionText);
         }
       }
+      console.log(JSON.stringify(entries));
       res.render("game", {AirDate: req.query.airDate, Entries: entries, Categories: Categories});
         //eturn res.status(200).json(questions);
     });
