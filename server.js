@@ -55,12 +55,13 @@ app.get('/questions', function(req, res) {
         params.push(airDate);
     }
 
-    dbQuery = dbQuery + 'ORDER BY AirDate desc';
+    dbQuery = dbQuery + 'ORDER BY AirDate DESC';
 
     if(paramCount == 0) {
         dbQuery = "SELECT * FROM Questions ORDER BY AirDate DESC";
     }
     dbQuery += ' LIMIT 30';
+    //console.log(dbQuery);
     db.all(dbQuery, params, (err, questions) => {
       var lookup = {};
       var items = questions;
@@ -86,7 +87,7 @@ app.get('/questions', function(req, res) {
           entries[i][j].QuestionText = encodeURIComponent(entries[i][j].QuestionText);
         }
       }
-      console.log(JSON.stringify(entries));
+      //console.log(JSON.stringify(entries));
       res.render("game", {AirDate: req.query.airDate, Entries: entries, Categories: Categories});
         //eturn res.status(200).json(questions);
     });

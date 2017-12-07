@@ -15,7 +15,9 @@
             text-align: center;
             color:#e6e600;
         }
-
+        a {
+          color: #e6e600;
+        }
         .panel{
             background: #0066ff;
             border: #4b50ff;
@@ -121,7 +123,8 @@
     //alert(element.cellIndex + "," + element.parentNode.rowIndex);
       document.getElementById("wwe").removeAttribute("hidden");
     var entries = <%-JSON.stringify(Entries)%>;
-    var entry = entries[element.parentNode.rowIndex-1][element.cellIndex-1];
+    //alert('' + element.cellIndex + ',' + element.parentNode.rowIndex-1);
+    var entry = entries[element.cellIndex][element.parentNode.rowIndex-1];
     entry.QuestionText = decodeURIComponent(entry.QuestionText);
     document.getElementById("wa").innerHTML = entry.QuestionText;
 
