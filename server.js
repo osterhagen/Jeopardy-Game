@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(cors());
 
-app.set("views", __dirname + "/../Views");
+app.set("views", __dirname);
 app.set("view engine", "ejs");
 
 app.get("/", function(req, res) {
