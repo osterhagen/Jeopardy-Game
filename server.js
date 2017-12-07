@@ -26,7 +26,7 @@ app.get("/", function(req, res) {
 });
 
 app.get('/questions', function(req, res) {
-    console.log(req.query);
+    //console.log(req.query.airDate );
     var showNumber = req.query.showNumber;
     var airDate = req.query.airDate;
 
@@ -39,7 +39,6 @@ app.get('/questions', function(req, res) {
         if(paramCount > 0) {
             dbQuery = dbQuery + 'AND ';
         }
-
         paramCount++;
         dbQuery = dbQuery + 'ShowNumber = ? ';
         params.push(showNumber);
@@ -63,17 +62,32 @@ app.get('/questions', function(req, res) {
     }
     dbQuery += ' LIMIT 30';
     db.all(dbQuery, params, (err, questions) => {
-
-        if(questions.length > 5000) {
-            return res.status(400).json({message: "too_many_results"});
+      var lookup = {};
+      var items = questions;
+      var Categories = [];
+      for (var item, i = 0; item = items[i++];) {
+        var cat = item.CategoryTitle;
+        if (!(cat in lookup)) {
+          lookup[cat] = 1;
+          Categories.push(cat);
         }
-
-        if (err) {
-            console.log(err);
-            return res.status(500).json({message: "Internal server error"});
+      }
+      function filter(obj, args) {
+        return obj.filter(function(obj) {
+          return Object.keys(args).every(function(c) {
+            return obj[c] == args[c];
+          });
+        });
+      }
+      var entries = [[],[]];
+      for (var i = 0; i < Categories.length; i++) {
+        entries[i] = filter(items,{CategoryTitle: Categories[i]});
+        for (var j=0; j < entries[i].length; j++) {
+          entries[i][j].QuestionText = encodeURIComponent(entries[i][j].QuestionText);
         }
-
-        return res.status(200).json(questions);
+      }
+      res.render("game", {AirDate: req.query.airDate, Entries: entries, Categories: Categories});
+        //eturn res.status(200).json(questions);
     });
 });
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head><!--    Best viewed on Google Chrome. Firefox messes with the margins. -->
+    <title>Jeopardy Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+            font-family: Helvetica Neue;
+            background: #4d4d4d;
+            overflow:hidden;
+            text-align: center;
+            color:#e6e600;
+        }
+
+        .panel{
+            background: #0066ff;
+            border: #4b50ff;
+            padding-top: 30pt;
+            width: 45%;
+            height: 450pt;
+            margin: auto;
+        }
+        table, th, td {
+            margin: auto;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<html >
+<body >
+<br>
+<br>
+<div class="panel panel-default">
+    <div  id="title">
+        <h2 >Historical Jeopardy- <%- AirDate %></h2>
+    </div>
+    <div id="Ss" class="row align-items-center col-md-10">
+        <table>
+          <tr>
+            <%
+              for (var i = 0; i < Categories.length; i++) {%>
+                <th><%- Categories[i]%></th>
+              <%}
+            %>
+          </tr>
+          <%
+          for (var i=0; i < Entries[0].length; i++) { %>
+            <tr>
+            <% for (var j=0; j < Entries.length; j++) { %>
+              <td onclick="cell(this)"><%-Entries[j][i].DollarValue%></td>
+            <% } %>
+            </tr>
+          <% } %>
+        </table>
+    </div>
+    <!--  <div class="panel-body">A Basic Panel</div>-->
+</div>
+
+<script>
+  function cell(element) {
+    //alert(element.cellIndex + "," + element.parentNode.rowIndex);
+    var entries = <%-JSON.stringify(Entries)%>;
+    var entry = entries[element.parentNode.rowIndex-1][element.cellIndex];
+    alert(JSON.stringify(entry));
+  }
+</script>
+
+
+
+</body>
+</html>
