@@ -55,7 +55,7 @@ app.get('/questions', function(req, res) {
     if(paramCount == 0) {
         dbQuery = "SELECT * FROM Questions ORDER BY AirDate DESC";
     }
-
+    dbQuery += ' LIMIT 30';
     db.all(dbQuery, params, (err, questions) => {
 
         if(questions.length > 5000) {
