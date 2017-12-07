@@ -66,8 +66,7 @@
     //alert(element.cellIndex + "," + element.parentNode.rowIndex);
     var entries = <%-JSON.stringify(Entries)%>;
     var entry = entries[element.parentNode.rowIndex-1][element.cellIndex-1];
-    entry.QuestionText = decodeURIComponent( entry.QuestionText);
-    alert(entry.QuestionText);
+    alert(entry.AnswerText);
   }
 </script>
 
