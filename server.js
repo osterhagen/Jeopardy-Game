@@ -24,14 +24,14 @@ app.get('/questions', function(req, res) {
     var showNumber = req.query.showNumber;
     var airDate = req.query.airDate;
 
-    var dbQuery = "select * from Questions join Categories on Questions.CategoryCode = Categories.CategoryCode where ";
+    var dbQuery = "SELECT * FROM Questions JOIN Categories ON Questions.CategoryCode = Categories.CategoryCode WHERE ";
     var paramCount = 0;
     var params = [];
 
     if (showNumber) {
 
         if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
+            dbQuery = dbQuery + 'AND ';
         }
 
         paramCount++;
@@ -42,7 +42,7 @@ app.get('/questions', function(req, res) {
     if (airDate) {
 
         if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
+            dbQuery = dbQuery + 'AND ';
         }
 
         paramCount++;
@@ -50,10 +50,10 @@ app.get('/questions', function(req, res) {
         params.push(airDate);
     }
 
-    dbQuery = dbQuery + 'order by AirDate desc';
+    dbQuery = dbQuery + 'ORDER BY AirDate desc';
 
     if(paramCount == 0) {
-        dbQuery = "select * from Questions order by AirDate desc";
+        dbQuery = "SELECT * FROM Questions ORDER BY AirDate DESC";
     }
 
     db.all(dbQuery, params, (err, questions) => {
