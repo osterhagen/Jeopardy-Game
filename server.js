@@ -1,131 +1,32 @@
-var express = require("express");
-var sqlite3 = require("sqlite3");
-var bodyParser = require("body-parser");
-var jsonWT = require('jsonwebtoken');
-var dateandtime = require('date-and-time');
+var express = require('express');
+var sqlite3 = require('sqlite3').verbose();
+var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var app = express();
 
-var appRouter = express.Router();
-var db = new sqlite3.Database('Data/Jeopardy.db');
-app.use( bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+var db = new sqlite3.Database('Jeopardy.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({type: 'application/json'}));
+app.use(cors());
 
-appRouter.get("/", function(req,res) {
-    db.get("select * from users",function(e,u){
-        return res.json(u);
-    })
-    return res.send("Hello World");
-})
 
-appRouter.post('/auth/signin', function(req, res) {
-    var userID = req.body.UserID;
-    var password = req.body.UserPassword;
-    var params = [userID, password];
-    var currentQuery = "SELECT * FROM Users WHERE UserID = ? AND UserPassword = ?";
-    db.all(currentQuery, params, function(err, result) {
-        if(userID === undefined || password === undefined) {
-            return res.status(400).json({message: "invalid_data"});
-        }
-        else if(JSON.stringify(result).length < 3) {
-            return res.status(401).json({message: "invalid_credentials"});
-        }else {
-            //var authToken = jsonWT.sign(userID, app.get('superSecret'), {expiresInMinutes:1});
-            var date = new Date();
-            var dates = dateandtime.format(date, 'YYYY/MM/DD HH:mm');
-            var authToken = Math.random().toString(26).substring(2); // found online
-            var query = " UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE UserID = ?";
-            var params = [authToken, dates+"", userID];
-            db.run(query, params);
-            //console.log(date + "        " + authToken);
-            return res.status(200).json({message: "success", "authToken": authToken});
-        }
-    });
+app.get("/", function(req, res) {
+  var query = "SELECT * FROM (SELECT DISTINCT ShowNumber, AirDate FROM Questions ORDER BY AirDate DESC LIMIT 50) AS t ORDER BY AirDate ASC";
+  var params = [];
+
+  db.all(query, params, (err, result) => {
+    return res.status(200).json(result);
+  })
 });
 
-// The reason this method is really obscure is because date-and-time would not format the
-// dates well on my machine.
-appRouter.use(function (req, res, next) {
-    var authToken = req.query.token || req.headers['x-access-token'];
-    if (authToken) {
-        var query = "SELECT AuthTokenIssued FROM Users WHERE AuthToken = ?";
-        var params = [authToken];
-        db.all(query, params, function (err, result) {
-            if (result.length <= 0){return res.status(400).json({message: "unauthorized access"});}
-            var currentTime = dateandtime.format(new Date(), 'YYYY/MM/DD HH:mm') + "";
-            var then =result[0].AuthTokenIssued.split(/[\s//:]+/);
-            var now = currentTime.split(/[\s//:]+/);
-            now[3]+= now[4];
-            then[3] += then[4];
-            var nowInt = parseFloat(now[3]);
-            var thenInt = parseFloat(then[3]);
-            if(nowInt-thenInt <= 100 && nowInt-thenInt > 0){
-                next();
-            }
-            else {return res.status(400).json({message: "auth token expired"});}
-        });
-
-    }
-    else {return res.status(400).json({message: "unauthorized access"});}
-});
-
-appRouter.get('/questions', function(req, res) {
-    var categoryTitle = req.query.categoryTitle;
-    var dollarValue = req.query.dollarValue;
-    var questionText = req.query.questionText;
-    var answerText = req.query.answerText;
+app.get('/questions', function(req, res) {
     var showNumber = req.query.showNumber;
     var airDate = req.query.airDate;
 
     var dbQuery = "select * from Questions join Categories on Questions.CategoryCode = Categories.CategoryCode where ";
     var paramCount = 0;
     var params = [];
-
-    if (categoryTitle != null) {
-
-        if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
-        }
-
-        paramCount++;
-        dbQuery = dbQuery + 'CategoryTitle = ? ';
-        params.push(categoryTitle.toUpperCase());
-    }
-
-    if (dollarValue != null) {
-
-        if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
-        }
-
-        paramCount++;
-        dbQuery = dbQuery + 'DollarValue = ? ';
-        dollarValue = "$" + dollarValue;
-        params.push(dollarValue);
-    }
-
-    if (questionText) {
-
-        if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
-        }
-
-        paramCount++;
-        dbQuery = dbQuery + 'QuestionText like ? ' ;
-        questionText = '%' + questionText + '%';
-        params.push(questionText);
-    }
-
-    if (answerText) {
-
-        if(paramCount > 0) {
-            dbQuery = dbQuery + 'and ';
-        }
-
-        paramCount++;
-        dbQuery = dbQuery + 'AnswerText = ? ';
-        params.push(answerText);
-    }
 
     if (showNumber) {
 
@@ -171,7 +72,7 @@ appRouter.get('/questions', function(req, res) {
 });
 
 //not in transaction standard, everything else works
-appRouter.post('/questionadd', function(req, res) {
+app.post('/questionadd', function(req, res) {
     // getting data
     var categoryCode = req.body.categoryCode;
     var categoryTitle = req.body.categoryTitle;
@@ -229,7 +130,7 @@ appRouter.post('/questionadd', function(req, res) {
 });
 
 
-app.use('', appRouter);
+
 var port = process.env.PORT || 8000;
 app.listen(port, function() {
     console.log("Running server on port " + port);
