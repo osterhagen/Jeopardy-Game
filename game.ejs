@@ -19,14 +19,58 @@
         .panel{
             background: #0066ff;
             border: #4b50ff;
-            padding-top: 30pt;
-            width: 45%;
-            height: 450pt;
+            padding-top: 20pt;
+            width: 95%;
+            height: 480pt;
             margin: auto;
         }
-        table, th, td {
+         {
+
+        }
+        #Ss {
+            width: 97%;
             margin: auto;
-            border: 1px solid black;
+            padding-left: 20pt;
+        }
+        .well,
+         table, th, td {
+            background: #0066ff;
+            border: 3px black;
+            margin: auto;
+        }
+        th, td {
+            text-align: center;
+            width: 350pt;
+        }
+        td {
+            height: 50pt;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            top: 100pt;
+            background: #0066ff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 33%;
+        }
+        #wwe {
+
+            background-color: black;
+            color: whitesmoke;
         }
     </style>
 </head>
@@ -39,12 +83,13 @@
     <div  id="title">
         <h2 >Historical Jeopardy- <%- AirDate %></h2>
     </div>
-    <div id="Ss" class="row align-items-center col-md-10">
-        <table>
+    <br>
+    <div id="Ss" class=" row align-items-center col-md-10">
+        <table class="table-responsive">
           <tr>
             <%
               for (var i = 0; i < Categories.length; i++) {%>
-                <th><%- Categories[i]%></th>
+                <th class="well"><%- Categories[i]%></th>
               <%}
             %>
           </tr>
@@ -52,11 +97,21 @@
           for (var i=0; i < Entries[0].length; i++) { %>
             <tr>
             <% for (var j=0; j < Entries.length; j++) { %>
-              <td onclick="cell(this)"><%-Entries[j][i].DollarValue%></td>
+              <td class="well" onclick="cell(this)"><%-Entries[j][i].DollarValue%></td>
             <% } %>
             </tr>
           <% } %>
         </table>
+    </div>
+
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="wa"></p>
+            <button id="wwe" >Reveal Answer?</button>
+        </div>
+
     </div>
     <!--  <div class="panel-body">A Basic Panel</div>-->
 </div>
@@ -67,7 +122,34 @@
     var entries = <%-JSON.stringify(Entries)%>;
     var entry = entries[element.parentNode.rowIndex-1][element.cellIndex-1];
     entry.QuestionText = decodeURIComponent( entry.QuestionText);
-    alert(entry.QuestionText);
+    document.getElementById("wa").innerHTML = entry.QuestionText;
+
+      // Get the modal
+      var modal = document.getElementById('myModal');
+      var btn = document.getElementById("wwe");
+// Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+    //alert(entry.QuestionText);
+      // When the user clicks on the button, open the modal
+
+      modal.style.display = "block";
+
+// When the user clicks on the button, open the modal
+      btn.onclick = function() {
+          document.getElementById("wa").innerHTML = entry.AnswerText;
+          document.getElementById("wwe").setAttribute("hidden", true);
+      }
+
+
+// When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+          modal.style.display = "none";
+      }
+
+
+      element.innerHTML = "";
+      //element.removeAttribute("onclick");
   }
 </script>
 
