@@ -119,6 +119,7 @@
 <script>
   function cell(element) {
     //alert(element.cellIndex + "," + element.parentNode.rowIndex);
+      document.getElementById("wwe").removeAttribute("hidden");
     var entries = <%-JSON.stringify(Entries)%>;
     var entry = entries[element.parentNode.rowIndex-1][element.cellIndex-1];
     entry.QuestionText = decodeURIComponent(entry.QuestionText);
