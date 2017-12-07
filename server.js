@@ -24,7 +24,7 @@ app.get('/questions', function(req, res) {
     var showNumber = req.query.showNumber;
     var airDate = req.query.airDate;
 
-    var dbQuery = "SELECT * FROM Questions JOIN Categories ON Questions.CategoryCode = Categories.CategoryCode WHERE ";
+    var dbQuery = "SELECT DollarValue, QuestionText, AnswerText, CategoryTitle FROM Questions JOIN Categories ON Questions.CategoryCode = Categories.CategoryCode WHERE ";
     var paramCount = 0;
     var params = [];
 
