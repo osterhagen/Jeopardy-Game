@@ -2,6 +2,7 @@ Jeopardy-Game
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/osterhagen/Jeopardy-Game)
 [![David](https://img.shields.io/david/expressjs/express.svg)](https://github.com/osterhagen/Jeopardy-Game/network/dependencies)
+[![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=my-website)](https://jeopardy252.herokuapp.com/)
 ======
 CS 252 Lab 6
 ## Deployed
