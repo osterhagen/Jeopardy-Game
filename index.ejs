@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<head><!--    Best viewed on Google Chrome. Firefox messes with the margins. -->
+    <title>Jeopardy</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+            font-family: Helvetica Neue;
+            background: #4d4d4d;
+            overflow:hidden;
+            text-align: center;
+            color:#e6e600;
+        }
+
+        .panel{
+            background: #0066ff;
+            border: #4b50ff;
+            padding-top: 30pt;
+            width: 45%;
+            height: 450pt;
+            margin: auto;
+        }
+        table, th, td {
+            margin: auto;
+            border: 1px solid black;
+        }
+        #Ss {
+            padding-left: 100pt;
+        }
+    </style>
+</head>
+
+<html >
+<body >
+<br>
+<br>
+<div class="panel panel-default">
+    <div  id="title">
+        <h2 >Historical Jeopardy</h2>
+    </div>
+    <h4 id="description">Play the most popular Jeopardy Games of certain years!</h4>
+    <h4 id="description">Select from the dropdown menu which game you want to play:</h4>
+
+
+
+        <div id="Ss" class="row align-items-center col-md-10">
+                <select id="Radius" class="form-control" required>
+                    <option value="">Select Search Range</option>
+                    <%
+                    var games =   result ;
+                    for(var i = 0; i < games.length; i++){ %>
+                        <option value=<%- games[i].AirDate %>> <%- games[i].AirDate %> </option>
+                    <% } %>
+                </select>
+            <br>
+            <button class="btn-primary btn mt-4" onClick="clicks()" >Submit</button>
+
+
+        </div>
+
+
+
+    <!--  <div class="panel-body">A Basic Panel</div>-->
+</div>
+
+<script>
+    function clicks() {
+
+        var e = document.getElementById("Radius");
+        var value = e.options[e.selectedIndex].value;
+        window.location.href = document.URL + "questions?airDate=" + value;
+    }
+</script>
+
+
+
+</body>
+</html>
