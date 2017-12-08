@@ -7,6 +7,8 @@ Jeopardy-Game
 CS 252 Lab 6
 ## Deployed
 https://jeopardy252.herokuapp.com/
+## Demo Video
+https://youtu.be/k4WxDwn5wTk
 ## Team members
 * Omar Raza (razao@purdue.edu)
 * Jackie Wu (wu891@purdue.edu)
